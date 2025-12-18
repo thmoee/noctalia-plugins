@@ -16,7 +16,7 @@
       "desc": "Terminal command used to execute the system update command. Optional: {} for update command.",
       "placeholder": "e.g., foot -e, hyprctl dispatch exec '[float] kitty -e {}'"
     },
-    "customCmdGetNumUpdate": {
+    "customCmdGetNumUpdates": {
       "label": "Custom Update Count Command",
       "desc": "Shell command that must output a single integer representing the number of available updates.",
       "placeholder": "e.g., yay -Quq 2>/dev/null | wc -l"
@@ -29,6 +29,15 @@
     "updateInterval": {
       "label": "Update Check Interval",
       "desc": "Polling interval for update checks"
+    },
+    "currentCommands": {
+      "label": "Currently configured commands"
+    },
+    "currentNumUpdatesCmd": {
+      "label": "Update count"
+    },
+    "currentUpdateCmd": {
+      "label": "System update"
     }
   },
   "tooltip": {

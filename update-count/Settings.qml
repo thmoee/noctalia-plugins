@@ -14,18 +14,17 @@ ColumnLayout {
   property string currentIconName: pluginApi?.pluginSettings?.currentIconName || pluginApi?.manifest?.metadata?.defaultSettings?.currentIconName
   property bool hideOnZero: pluginApi?.pluginSettings?.hideOnZero || pluginApi?.manifest?.metadata?.defaultSettings?.hideOnZero
 
-
-  property string customCmdGetNumUpdate: pluginApi?.pluginSettings.customCmdGetNumUpdate || ""
+  property string customCmdGetNumUpdates: pluginApi?.pluginSettings.customCmdGetNumUpdates || ""
   property string customCmdDoSystemUpdate: pluginApi?.pluginSettings.customCmdDoSystemUpdate || ""
 
-  implicitWidth: root.implicitWidth
-
-  spacing: Style.marginM
+  spacing: Style.marginL
 
   Component.onCompleted: {
     Logger.i("UpdateCount", "Settings UI loaded");
   }
 
+  //
+  // ------ General ------
   NToggle {
     id: widgetSwitch
     label: pluginApi?.tr("settings.hideWidget.label")
@@ -70,45 +69,6 @@ ColumnLayout {
     }
   }
 
-  NDivider {
-    visible: true
-    Layout.fillWidth: true
-    Layout.topMargin: Style.marginL
-    Layout.bottomMargin: Style.marginL
-  }
-
-  NTextInput {
-    Layout.fillWidth: true
-    label: pluginApi?.tr("settings.terminal.label")
-    description: pluginApi?.tr("settings.terminal.desc")
-    placeholderText: pluginApi?.tr("settings.terminal.placeholder")
-    text: root.updateTerminalCommand
-    onTextChanged: root.updateTerminalCommand = text
-  }
-
-  NTextInput {
-    label: pluginApi?.tr("settings.customCmdGetNumUpdate.label")
-    description: pluginApi?.tr("settings.customCmdGetNumUpdate.desc")
-    placeholderText: pluginApi?.tr("settings.customCmdGetNumUpdate.placeholder")
-    text: root.customCmdGetNumUpdate
-    onTextChanged: root.customCmdGetNumUpdate = text
-  }
-
-  NTextInput {
-    label: pluginApi?.tr("settings.customCmdDoSystemUpdate.label")
-    description: pluginApi?.tr("settings.customCmdDoSystemUpdate.desc")
-    placeholderText: pluginApi?.tr("settings.customCmdDoSystemUpdate.placeholder")
-    text: root.customCmdDoSystemUpdate
-    onTextChanged: root.customCmdDoSystemUpdate = text
-  }
-
-  NDivider {
-    visible: true
-    Layout.fillWidth: true
-    Layout.topMargin: Style.marginL
-    Layout.bottomMargin: Style.marginL
-  }
-
   RowLayout {
     Layout.fillWidth: true
     spacing: Style.marginL
@@ -134,6 +94,81 @@ ColumnLayout {
     }
   }
 
+  NDivider {
+    visible: true
+    Layout.fillWidth: true
+    Layout.topMargin: Style.marginL
+    Layout.bottomMargin: Style.marginL
+  }
+
+  //
+  // ------ Custom commands ------
+  //
+  NTextInput {
+    label: pluginApi?.tr("settings.customCmdGetNumUpdates.label")
+    description: pluginApi?.tr("settings.customCmdGetNumUpdates.desc")
+    placeholderText: pluginApi?.tr("settings.customCmdGetNumUpdates.placeholder")
+    text: root.customCmdGetNumUpdates
+    onTextChanged: root.customCmdGetNumUpdates = text
+  }
+
+  NTextInput {
+    label: pluginApi?.tr("settings.customCmdDoSystemUpdate.label")
+    description: pluginApi?.tr("settings.customCmdDoSystemUpdate.desc")
+    placeholderText: pluginApi?.tr("settings.customCmdDoSystemUpdate.placeholder")
+    text: root.customCmdDoSystemUpdate
+    onTextChanged: root.customCmdDoSystemUpdate = text
+  }
+
+  NTextInput {
+    Layout.fillWidth: true
+    label: pluginApi?.tr("settings.terminal.label")
+    description: pluginApi?.tr("settings.terminal.desc")
+    placeholderText: pluginApi?.tr("settings.terminal.placeholder")
+    text: root.updateTerminalCommand
+    onTextChanged: root.updateTerminalCommand = text
+  }
+
+  NDivider {
+    visible: true
+    Layout.fillWidth: true
+    Layout.topMargin: Style.marginL
+    Layout.bottomMargin: Style.marginL
+  }
+
+  //
+  // ------ Information ------
+  //
+  NLabel {
+    label: pluginApi?.tr("settings.currentCommands.label")
+  }
+
+  ColumnLayout {
+    RowLayout {
+      NText {
+        Layout.fillWidth: true
+        text: pluginApi?.tr("settings.currentNumUpdatesCmd.label")
+        color: Settings.data.colorSchemes.darkMode ? Color.mSecondary : Color.mOnSecondary
+      }
+      NText {
+        text: root.customCmdGetNumUpdates || pluginApi?.mainInstance?.updater.cmdGetNumUpdates || "NA"
+        color: Settings.data.colorSchemes.darkMode ? Color.mTertiary : Color.mOnTertiary
+      }
+    }
+
+    RowLayout {
+      NText {
+        Layout.fillWidth: true
+        text: pluginApi?.tr("settings.currentUpdateCmd.label")
+        color: Settings.data.colorSchemes.darkMode ? Color.mSecondary : Color.mOnSecondary
+      }
+      NText {
+        text: root.customCmdDoSystemUpdate || pluginApi?.mainInstance?.updater.cmdDoSystemUpdate || "NA"
+        color: Settings.data.colorSchemes.darkMode ? Color.mTertiary : Color.mOnTertiary
+      }
+    }
+  }
+
   function saveSettings() {
     if (!pluginApi) {
       Logger.e("UpdateCount", "Cannot save settings: pluginApi is null");
@@ -141,11 +176,11 @@ ColumnLayout {
     }
 
     pluginApi.pluginSettings.updateIntervalMinutes = root.updateIntervalMinutes;
-    pluginApi.pluginSettings.updateTerminalCommand = root.updateTerminalCommand;
+    pluginApi.pluginSettings.updateTerminalCommand = root.updateTerminalCommand || pluginApi?.manifest?.metadata.defaultSettings?.updateTerminalCommand;
     pluginApi.pluginSettings.currentIconName = root.currentIconName;
     pluginApi.pluginSettings.hideOnZero = root.hideOnZero;
 
-    pluginApi.pluginSettings.customCmdGetNumUpdate = root.customCmdGetNumUpdate;
+    pluginApi.pluginSettings.customCmdGetNumUpdates = root.customCmdGetNumUpdates;
     pluginApi.pluginSettings.customCmdDoSystemUpdate = root.customCmdDoSystemUpdate;
 
     pluginApi.saveSettings();

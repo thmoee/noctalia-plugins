@@ -34,7 +34,6 @@ Rectangle {
   //
   // ------ Widget ------
   //
-
   Item {
     id: layout
     anchors.centerIn: parent
