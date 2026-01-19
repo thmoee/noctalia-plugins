@@ -56,11 +56,15 @@ Item {
       root.inputProfiles = inputs
       root.profilesLoaded = true
 
-      if (pluginApi) {
-        pluginApi.pluginSettings.outputProfiles = outputs
-        pluginApi.pluginSettings.inputProfiles = inputs
-        pluginApi.saveSettings()
+      if (!pluginApi) {
+        root.profilesLoaded = false
+        Logger.e("EasyEffects", "can't save loaded profiles into pluginSettings: pluginApi is null")
+        return
       }
+      
+      pluginApi.pluginSettings.outputProfiles = outputs
+      pluginApi.pluginSettings.inputProfiles = inputs
+      pluginApi.saveSettings()
     }
   }
 
@@ -95,6 +99,14 @@ Item {
 
   IpcHandler {
     target: "plugin:easyeffects"
+
+    function reloadProfiles() {
+      if (!pluginApi) {
+        Logger.e("EasyEffects", "Can't reload profiles: pluginApi is null")
+        return
+      }
+      checkActiveInputProfile.running = true
+    }
   }
 
   Component.onCompleted: {

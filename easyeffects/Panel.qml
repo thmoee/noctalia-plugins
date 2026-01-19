@@ -1,19 +1,17 @@
 import QtQuick
 import QtQuick.Layouts
+import Quickshell.Io
 import qs.Commons
 import qs.Widgets
 
 Item {
   id: root
 
-  // Plugin API (injected by PluginPanelSlot)
   property var pluginApi: null
 
-  // SmartPanel properties (required for panel behavior)
   readonly property var geometryPlaceholder: panelContainer
   readonly property bool allowAttach: true
 
-  // Preferred dimensions
   property real contentPreferredWidth: 340 * Style.uiScaleRatio
   property real contentPreferredHeight: 420 * Style.uiScaleRatio
 
@@ -22,7 +20,22 @@ Item {
   property var activeOutput: pluginApi?.pluginSettings?.activeOutput || ""
   property var activeInput: pluginApi?.pluginSettings?.activeInput || ""
 
+  function openEasyEffects() {
+    runEasyEffects.running = true
+    if (!pluginApi) {
+      Logger.e("EasyEffects", "Cannot close Panel: pluginApi is null")
+      return
+    }
+    pluginApi.closePanel(root.screen)
+  }
+
   anchors.fill: parent
+
+  Process {
+    id: runEasyEffects
+    command: ["sh", "-c", "easyeffects"]
+    running: false
+  }
 
   Rectangle {
     id: panelContainer
@@ -49,9 +62,9 @@ Item {
           Layout.fillWidth: true
         }
 
-        NIconButton {
-          icon: "reload"
-        }
+        // NIconButton {
+        //   icon: "reload"
+        // }
       }
 
       Rectangle {
@@ -150,6 +163,7 @@ Item {
         Layout.fillWidth: true
         text: "Open EasyEffects"
         icon: "external-link"
+        onClicked: openEasyEffects()
       }
     }
   }

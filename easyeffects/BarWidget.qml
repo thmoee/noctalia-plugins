@@ -7,23 +7,24 @@ import qs.Widgets
 Rectangle {
   id: root
 
-  // Plugin API (injected by PluginService)
   property var pluginApi: null
 
-  // Required properties for bar widgets
   property ShellScreen screen
   property string widgetId: ""
   property string section: ""
 
-  readonly property string outputProfile: pluginApi?.pluginSettings?.activeOutput || ""
-  readonly property string inputProfile: pluginApi?.pluginSettings?.activeInput || ""
+  property var cfg: pluginApi?.pluginSettings || ({})
+  property var defaults: pluginApi?.manifest?.metadata?.defaultSettings || ({})
+
+  readonly property string outputProfile: cfg.activeOutput || ""
+  readonly property string inputProfile: cfg.activeInput || ""
     
   readonly property string barPosition: Settings.data.bar.position || "top"
   readonly property bool barIsVertical: barPosition === "left" || barPosition === "right"
-  // add settings later
-  property bool onlyIcon: false
-  property bool textVisible: barIsVertical || !onlyIcon
-    
+
+  property bool onlyIcon: cfg.onlyIcon ?? defaults.onlyIcon
+  property bool textVisible: !barIsVertical && !onlyIcon
+
   implicitWidth: barIsVertical ? Style.capsuleHeight : contentRow.implicitWidth + Style.marginM * 2
   implicitHeight: Style.capsuleHeight
 
