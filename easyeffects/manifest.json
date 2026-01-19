@@ -10,12 +10,15 @@
   "entryPoints": {
     "main": "Main.qml",
     "barWidget": "BarWidget.qml",
-    "panel": "Panel.qml"
+    "panel": "Panel.qml",
+    "settings": "Settings.qml"
   },
   "dependencies": {
     "plugins": []
   },
   "metadata": {
-    "defaultSettings": {}
+    "defaultSettings": {
+      "onlyIcon": false
+    }
   }
 }
