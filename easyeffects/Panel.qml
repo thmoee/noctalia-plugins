@@ -37,6 +37,18 @@ Item {
     }
   }
 
+  function changeOutputProfile(profileName) {
+    if (pluginApi?.mainInstance) {
+      pluginApi.mainInstance.loadOutputProfile(profileName)
+    }
+  }
+
+  function changeInputProfile(profileName) {
+    if (pluginApi?.mainInstance) {
+      pluginApi.mainInstance.loadInputProfile(profileName)
+    }
+  }
+
   anchors.fill: parent
 
   Process {
@@ -115,6 +127,7 @@ Item {
                       required property string modelData
                       text: modelData
                       checked: activeOutput === modelData ? true : false
+                      onClicked: changeOutputProfile(modelData)
                     }
                   }
                 }
@@ -151,6 +164,7 @@ Item {
                       required property string modelData
                       text: modelData
                       checked: activeInput === modelData ? true : false
+                      onClicked: changeInputProfile(modelData)
                     }
                   }
                 }

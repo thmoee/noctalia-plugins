@@ -20,6 +20,32 @@ Item {
     loadProfiles.running = true
   }
 
+  function loadOutputProfile(profileName) {
+    switchProfile.command = ["sh", "-c", "easyeffects -l" + profileName]
+    switchProfile.running = true
+
+    if (!pluginApi) {
+      Logger.e("EasyEffects", "Couldn't set new output Profile: pluginApi is null")
+      return
+    }
+
+    cfg.activeOutput = profileName
+    pluginApi.saveSettings()
+  }
+
+  function loadInputProfile(profileName) {
+    switchProfile.command = ["sh", "-c", "easyeffects -l" + profileName]
+    switchProfile.running = true
+
+    if (!pluginApi) {
+      Logger.e("EasyEffects", "Couldn't set new input Profile: pluginApi is null")
+      return
+    }
+    
+    cfg.activeInput = profileName
+    pluginApi.saveSettings()
+  }
+
   Process {
     id: loadProfiles
     command: ["sh", "-c", "easyeffects -p"]
@@ -100,6 +126,11 @@ Item {
         }
       }
     }
+  }
+
+  Process {
+    id: switchProfile
+    running: false
   }
 
   IpcHandler {
