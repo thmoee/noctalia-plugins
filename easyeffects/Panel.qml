@@ -15,10 +15,12 @@ Item {
   property real contentPreferredWidth: 340 * Style.uiScaleRatio
   property real contentPreferredHeight: 420 * Style.uiScaleRatio
 
-  property var outputProfiles: pluginApi?.pluginSettings?.outputProfiles || []
-  property var inputProfiles: pluginApi?.pluginSettings?.inputProfiles || []
-  property var activeOutput: pluginApi?.pluginSettings?.activeOutput || ""
-  property var activeInput: pluginApi?.pluginSettings?.activeInput || ""
+  property var cfg: pluginApi?.pluginSettings || ({})
+
+  property var outputProfiles: cfg.outputProfiles || []
+  property var inputProfiles: cfg.inputProfiles || []
+  property var activeOutput: cfg.activeOutput || ""
+  property var activeInput: cfg.activeInput || ""
 
   function openEasyEffects() {
     runEasyEffects.running = true
@@ -27,6 +29,12 @@ Item {
       return
     }
     pluginApi.closePanel(root.screen)
+  }
+
+  function reload() {
+    if (pluginApi?.mainInstance) {
+      pluginApi.mainInstance.reloadProfiles()
+    }
   }
 
   anchors.fill: parent
@@ -62,9 +70,10 @@ Item {
           Layout.fillWidth: true
         }
 
-        // NIconButton {
-        //   icon: "reload"
-        // }
+        NIconButton {
+          icon: "reload"
+          onClicked: reload()
+        }
       }
 
       Rectangle {

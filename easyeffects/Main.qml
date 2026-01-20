@@ -9,11 +9,16 @@ Item {
 
   property var pluginApi: null
 
+  property var cfg: pluginApi?.pluginSettings || ({})
+
   property string profileOutput: ""
   property var outputProfiles: []
   property var inputProfiles: []
   property bool profilesLoaded: false
 
+  function reloadProfiles() {
+    loadProfiles.running = true
+  }
 
   Process {
     id: loadProfiles
@@ -99,14 +104,6 @@ Item {
 
   IpcHandler {
     target: "plugin:easyeffects"
-
-    function reloadProfiles() {
-      if (!pluginApi) {
-        Logger.e("EasyEffects", "Can't reload profiles: pluginApi is null")
-        return
-      }
-      checkActiveInputProfile.running = true
-    }
   }
 
   Component.onCompleted: {
